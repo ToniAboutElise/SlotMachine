@@ -485,5 +485,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SlotMachineMainCanvas
       objectReference: {fileID: 0}
+    - target: {fileID: 4035951317114140703, guid: b4af3b1541d7041448dc6fa7b6ec8342,
+        type: 3}
+      propertyPath: m_Interactable
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b4af3b1541d7041448dc6fa7b6ec8342, type: 3}
