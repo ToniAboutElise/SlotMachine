@@ -20,6 +20,14 @@ public class RollerBehaviour : MonoBehaviour
 
     protected bool canRoll = false;
 
+    protected RollerStatus rollerStatus = RollerStatus.Idle;
+
+    protected enum RollerStatus
+    {
+        Idle,
+        Rolling
+    }
+
     public struct FigureImages
     {
         public Sprite bell;
@@ -50,15 +58,15 @@ public class RollerBehaviour : MonoBehaviour
 
     public void SetFigures()
     {
-            for(int i = 0; i < rollerTransforms.Count; i++)
+            for(int i = 0; i < rollerTransforms.Count-1; i++)
             { 
                 Figure figureInstance = Instantiate(figurePrefab);
                 figureInstances.Add(figureInstance);
                 figureInstance.transform.SetParent(rollerTransforms[i]);
                 figureInstance.transform.localPosition = Vector3.zero;
-            currentFigure++;
+                currentFigure++;
 
-            CheckFigureTypeToSpawn(roller.figures[i], figureInstance);
+                CheckFigureTypeToSpawn(roller.figures[i], figureInstance);
             
         }
     }
@@ -95,47 +103,6 @@ public class RollerBehaviour : MonoBehaviour
     {
         float rollTime = Random.Range(2, 4);
         StartCoroutine(AllowRoll(rollTime));
-        StartCoroutine(Roll());
-    }
-
-
-    protected IEnumerator Roll()
-    {
-        //Destroy last figure that exited the area
-        Destroy(rollerTransforms[rollerTransforms.Count-1].GetChild(0).gameObject);
-        figureInstances.RemoveAt(figureInstances.Count - 1);
-
-        //Move all the other figures to the next position
-        for (int i = 0; i < figureInstances.Count; i++)
-        {
-            if(i < rollerTransforms.Count)
-            {
-                figureInstances[i].transform.SetParent(rollerTransforms[i+1].transform);
-                figureInstances[i].transform.localPosition = Vector3.zero;
-            }
-        }
-
-        //Spawn a new figure at the first position
-        Figure figureInstance = Instantiate(figurePrefab);
-        CheckFigureTypeToSpawn(roller.figures[currentFigure], figureInstance);
-        figureInstances.Insert(0, figureInstance);
-        figureInstance.transform.SetParent(rollerTransforms[0]);
-        figureInstance.transform.localPosition = Vector3.zero;
-        if(currentFigure < roller.figures.Count - 1)
-        { 
-            currentFigure++;
-        }
-        else
-        {
-            currentFigure = 0;
-        }
-
-        //Reroll again if possible
-        yield return new WaitForSeconds(0.2f);
-        if(canRoll == true)
-        {
-            StartCoroutine(Roll());
-        }
     }
 
     protected IEnumerator AllowRoll(float rollTime)
@@ -145,4 +112,54 @@ public class RollerBehaviour : MonoBehaviour
         canRoll = false;
     }
 
+    protected void SpawnNewFigure()
+    {
+        Figure figureInstance = Instantiate(figurePrefab);
+        CheckFigureTypeToSpawn(roller.figures[currentFigure], figureInstance);
+        figureInstances.Insert(0, figureInstance);
+        figureInstance.transform.SetParent(rollerTransforms[0]);
+        figureInstance.transform.localPosition = Vector3.zero;
+        if (currentFigure < roller.figures.Count - 1)
+        {
+            currentFigure++;
+        }
+        else
+        {
+            currentFigure = 0;
+        }
+    }
+
+    protected void DestroyEndFigure()
+    {
+        Destroy(rollerTransforms[rollerTransforms.Count - 1].GetChild(0).gameObject);
+        figureInstances.RemoveAt(figureInstances.Count - 1);
+    }
+
+    private void Update()
+    {
+        if (canRoll == true || rollerStatus == RollerStatus.Rolling)
+        {
+            rollerStatus = RollerStatus.Rolling;
+            figureInstances[0].transform.SetParent(rollerTransforms[1].transform);
+            figureInstances[0].transform.localPosition = Vector2.MoveTowards(figureInstances[0].transform.localPosition, Vector2.zero, Time.deltaTime * 300);
+            figureInstances[1].transform.SetParent(rollerTransforms[2].transform);
+            figureInstances[1].transform.localPosition = Vector2.MoveTowards(figureInstances[1].transform.localPosition, Vector2.zero, Time.deltaTime*300);
+            figureInstances[2].transform.SetParent(rollerTransforms[3].transform);
+            figureInstances[2].transform.localPosition = Vector2.MoveTowards(figureInstances[2].transform.localPosition, Vector2.zero, Time.deltaTime * 300);
+            figureInstances[3].transform.SetParent(rollerTransforms[4].transform);
+            figureInstances[3].transform.localPosition = Vector2.MoveTowards(figureInstances[3].transform.localPosition, Vector2.zero, Time.deltaTime * 300);
+
+            if (Vector2.Distance(figureInstances[0].transform.localPosition, Vector2.zero) == 0)
+            {
+                SpawnNewFigure();
+
+                DestroyEndFigure();
+
+                if (canRoll == false)
+                {
+                    rollerStatus = RollerStatus.Idle;
+                }
+            }
+        }
+    }
 }
