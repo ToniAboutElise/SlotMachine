@@ -16,6 +16,15 @@ public class RollerBehaviour : MonoBehaviour
 
     public FigureImages figureImages;
 
+    public List<Transform> rollerTransforms;
+
+    protected bool canRoll = false;
+
+    public Figure figureIn;
+    public Figure figure1;
+    public Figure figure2;
+    public Figure figure3;
+
     public struct FigureImages
     {
         public Sprite bell;
@@ -46,15 +55,15 @@ public class RollerBehaviour : MonoBehaviour
 
     public void SetFigures()
     {
-        foreach(Roller.Figure f in roller.figures)
-        {
-            Figure figureInstance = Instantiate(figurePrefab);
-            figureInstances.Add(figureInstance);
-            figureInstance.transform.SetParent(figuresContainer);
-            figureInstance.transform.localPosition = new Vector3(0, -220 * currentFigure, 0);
-            currentFigure++;
+            for(int i = 0; i < rollerTransforms.Count; i++)
+            { 
+                Figure figureInstance = Instantiate(figurePrefab);
+                figureInstances.Add(figureInstance);
+                figureInstance.transform.SetParent(rollerTransforms[i]);
+                figureInstance.transform.localPosition = new Vector3(0, 0, 0);
+                currentFigure++;
 
-            switch (f)
+            switch (roller.figures[i])
             {
                 case Roller.Figure.Bell:
                     figureInstance.figureImage.sprite = figureImages.bell;
@@ -80,4 +89,30 @@ public class RollerBehaviour : MonoBehaviour
             }
         }
     }
+
+    public void AdvanceRoller()
+    {
+        float rollTime = Random.Range(2, 4);
+
+        StartCoroutine(AllowRoll(rollTime));
+        StartCoroutine(Roll());
+    }
+
+
+    protected IEnumerator Roll()
+    {
+        yield return new WaitForSeconds(0.2f);
+        if(canRoll == true)
+        {
+            StartCoroutine(Roll());
+        }
+    }
+
+    protected IEnumerator AllowRoll(float rollTime)
+    {
+        canRoll = true;
+        yield return new WaitForSeconds(rollTime);
+        canRoll = false;
+    }
+
 }
