@@ -20,11 +20,6 @@ public class RollerBehaviour : MonoBehaviour
 
     protected bool canRoll = false;
 
-    public Figure figureIn;
-    public Figure figure1;
-    public Figure figure2;
-    public Figure figure3;
-
     public struct FigureImages
     {
         public Sprite bell;
@@ -60,8 +55,8 @@ public class RollerBehaviour : MonoBehaviour
                 Figure figureInstance = Instantiate(figurePrefab);
                 figureInstances.Add(figureInstance);
                 figureInstance.transform.SetParent(rollerTransforms[i]);
-                figureInstance.transform.localPosition = new Vector3(0, 0, 0);
-                currentFigure++;
+                figureInstance.transform.localPosition = Vector3.zero;
+            currentFigure++;
 
             switch (roller.figures[i])
             {
@@ -93,7 +88,6 @@ public class RollerBehaviour : MonoBehaviour
     public void AdvanceRoller()
     {
         float rollTime = Random.Range(2, 4);
-
         StartCoroutine(AllowRoll(rollTime));
         StartCoroutine(Roll());
     }
@@ -101,6 +95,21 @@ public class RollerBehaviour : MonoBehaviour
 
     protected IEnumerator Roll()
     {
+        for(int i = 0; i < figureInstances.Count; i++)
+        {
+            if(i != figureInstances.Count)
+            { 
+                figureInstances[i].transform.SetParent(rollerTransforms[i+1].transform);
+                figureInstances[i].transform.localPosition = Vector3.zero;
+            }
+            else
+            {
+                Destroy(figureInstances[i]);
+                Figure figureInstance = Instantiate(figurePrefab);
+                figureInstances.Add(figureInstance);
+            }
+        }
+
         yield return new WaitForSeconds(0.2f);
         if(canRoll == true)
         {
