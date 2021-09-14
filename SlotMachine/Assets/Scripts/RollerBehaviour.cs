@@ -58,30 +58,36 @@ public class RollerBehaviour : MonoBehaviour
                 figureInstance.transform.localPosition = Vector3.zero;
             currentFigure++;
 
-            switch (roller.figures[i])
-            {
-                case Roller.Figure.Bell:
-                    figureInstance.figureImage.sprite = figureImages.bell;
-                    break;
-                case Roller.Figure.Cherry:
-                    figureInstance.figureImage.sprite = figureImages.cherry;
-                    break;
-                case Roller.Figure.Berry:
-                    figureInstance.figureImage.sprite = figureImages.berry;
-                    break;
-                case Roller.Figure.Orange:
-                    figureInstance.figureImage.sprite = figureImages.orange;
-                    break;
-                case Roller.Figure.Watermelon:
-                    figureInstance.figureImage.sprite = figureImages.watermelon;
-                    break;
-                case Roller.Figure.Lemon:
-                    figureInstance.figureImage.sprite = figureImages.lemon;
-                    break;
-                case Roller.Figure.Grapes:
-                    figureInstance.figureImage.sprite = figureImages.grapes;
-                    break;
-            }
+            CheckFigureTypeToSpawn(roller.figures[i], figureInstance);
+            
+        }
+    }
+
+    protected void CheckFigureTypeToSpawn(Roller.Figure figure, Figure figureInstance)
+    {
+        switch (figure)
+        {
+            case Roller.Figure.Bell:
+                figureInstance.figureImage.sprite = figureImages.bell;
+                break;
+            case Roller.Figure.Cherry:
+                figureInstance.figureImage.sprite = figureImages.cherry;
+                break;
+            case Roller.Figure.Berry:
+                figureInstance.figureImage.sprite = figureImages.berry;
+                break;
+            case Roller.Figure.Orange:
+                figureInstance.figureImage.sprite = figureImages.orange;
+                break;
+            case Roller.Figure.Watermelon:
+                figureInstance.figureImage.sprite = figureImages.watermelon;
+                break;
+            case Roller.Figure.Lemon:
+                figureInstance.figureImage.sprite = figureImages.lemon;
+                break;
+            case Roller.Figure.Grapes:
+                figureInstance.figureImage.sprite = figureImages.grapes;
+                break;
         }
     }
 
@@ -95,21 +101,36 @@ public class RollerBehaviour : MonoBehaviour
 
     protected IEnumerator Roll()
     {
-        for(int i = 0; i < figureInstances.Count; i++)
+        //Destroy last figure that exited the area
+        Destroy(rollerTransforms[rollerTransforms.Count-1].GetChild(0).gameObject);
+        figureInstances.RemoveAt(figureInstances.Count - 1);
+
+        //Move all the other figures to the next position
+        for (int i = 0; i < figureInstances.Count; i++)
         {
-            if(i != figureInstances.Count)
-            { 
+            if(i < rollerTransforms.Count)
+            {
                 figureInstances[i].transform.SetParent(rollerTransforms[i+1].transform);
                 figureInstances[i].transform.localPosition = Vector3.zero;
             }
-            else
-            {
-                Destroy(figureInstances[i]);
-                Figure figureInstance = Instantiate(figurePrefab);
-                figureInstances.Add(figureInstance);
-            }
         }
 
+        //Spawn a new figure at the first position
+        Figure figureInstance = Instantiate(figurePrefab);
+        CheckFigureTypeToSpawn(roller.figures[currentFigure], figureInstance);
+        figureInstances.Insert(0, figureInstance);
+        figureInstance.transform.SetParent(rollerTransforms[0]);
+        figureInstance.transform.localPosition = Vector3.zero;
+        if(currentFigure < roller.figures.Count - 1)
+        { 
+            currentFigure++;
+        }
+        else
+        {
+            currentFigure = 0;
+        }
+
+        //Reroll again if possible
         yield return new WaitForSeconds(0.2f);
         if(canRoll == true)
         {
