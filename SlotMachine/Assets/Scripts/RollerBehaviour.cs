@@ -22,6 +22,8 @@ public class RollerBehaviour : MonoBehaviour
 
     protected RollerStatus rollerStatus = RollerStatus.Idle;
 
+    public float velocity = 1000; //this should go with the roller manager
+
     protected enum RollerStatus
     {
         Idle,
@@ -141,13 +143,13 @@ public class RollerBehaviour : MonoBehaviour
         {
             rollerStatus = RollerStatus.Rolling;
             figureInstances[0].transform.SetParent(rollerTransforms[1].transform);
-            figureInstances[0].transform.localPosition = Vector2.MoveTowards(figureInstances[0].transform.localPosition, Vector2.zero, Time.deltaTime * 300);
+            figureInstances[0].transform.localPosition = Vector2.MoveTowards(figureInstances[0].transform.localPosition, Vector2.zero, Time.deltaTime * velocity);
             figureInstances[1].transform.SetParent(rollerTransforms[2].transform);
-            figureInstances[1].transform.localPosition = Vector2.MoveTowards(figureInstances[1].transform.localPosition, Vector2.zero, Time.deltaTime*300);
+            figureInstances[1].transform.localPosition = Vector2.MoveTowards(figureInstances[1].transform.localPosition, Vector2.zero, Time.deltaTime* velocity);
             figureInstances[2].transform.SetParent(rollerTransforms[3].transform);
-            figureInstances[2].transform.localPosition = Vector2.MoveTowards(figureInstances[2].transform.localPosition, Vector2.zero, Time.deltaTime * 300);
+            figureInstances[2].transform.localPosition = Vector2.MoveTowards(figureInstances[2].transform.localPosition, Vector2.zero, Time.deltaTime * velocity);
             figureInstances[3].transform.SetParent(rollerTransforms[4].transform);
-            figureInstances[3].transform.localPosition = Vector2.MoveTowards(figureInstances[3].transform.localPosition, Vector2.zero, Time.deltaTime * 300);
+            figureInstances[3].transform.localPosition = Vector2.MoveTowards(figureInstances[3].transform.localPosition, Vector2.zero, Time.deltaTime * velocity);
 
             if (Vector2.Distance(figureInstances[0].transform.localPosition, Vector2.zero) == 0)
             {
