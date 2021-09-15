@@ -8,6 +8,8 @@ public class RollerBehaviour : MonoBehaviour
     public Roller roller;
     public Figure figurePrefab;
 
+    public SlotMachineManager slotMachineManager;
+
     public int currentFigure = 0;
 
     public Transform figuresContainer;
@@ -20,11 +22,9 @@ public class RollerBehaviour : MonoBehaviour
 
     protected bool canRoll = false;
 
-    protected RollerStatus rollerStatus = RollerStatus.Idle;
+    public RollerStatus rollerStatus = RollerStatus.Idle;
 
-    public float velocity = 1000; //this should go with the roller manager
-
-    protected enum RollerStatus
+    public enum RollerStatus
     {
         Idle,
         Rolling
@@ -143,13 +143,13 @@ public class RollerBehaviour : MonoBehaviour
         {
             rollerStatus = RollerStatus.Rolling;
             figureInstances[0].transform.SetParent(rollerTransforms[1].transform);
-            figureInstances[0].transform.localPosition = Vector2.MoveTowards(figureInstances[0].transform.localPosition, Vector2.zero, Time.deltaTime * velocity);
+            figureInstances[0].transform.localPosition = Vector2.MoveTowards(figureInstances[0].transform.localPosition, Vector2.zero, Time.deltaTime * slotMachineManager.velocity);
             figureInstances[1].transform.SetParent(rollerTransforms[2].transform);
-            figureInstances[1].transform.localPosition = Vector2.MoveTowards(figureInstances[1].transform.localPosition, Vector2.zero, Time.deltaTime* velocity);
+            figureInstances[1].transform.localPosition = Vector2.MoveTowards(figureInstances[1].transform.localPosition, Vector2.zero, Time.deltaTime* slotMachineManager.velocity);
             figureInstances[2].transform.SetParent(rollerTransforms[3].transform);
-            figureInstances[2].transform.localPosition = Vector2.MoveTowards(figureInstances[2].transform.localPosition, Vector2.zero, Time.deltaTime * velocity);
+            figureInstances[2].transform.localPosition = Vector2.MoveTowards(figureInstances[2].transform.localPosition, Vector2.zero, Time.deltaTime * slotMachineManager.velocity);
             figureInstances[3].transform.SetParent(rollerTransforms[4].transform);
-            figureInstances[3].transform.localPosition = Vector2.MoveTowards(figureInstances[3].transform.localPosition, Vector2.zero, Time.deltaTime * velocity);
+            figureInstances[3].transform.localPosition = Vector2.MoveTowards(figureInstances[3].transform.localPosition, Vector2.zero, Time.deltaTime * slotMachineManager.velocity);
 
             if (Vector2.Distance(figureInstances[0].transform.localPosition, Vector2.zero) == 0)
             {
@@ -160,6 +160,7 @@ public class RollerBehaviour : MonoBehaviour
                 if (canRoll == false)
                 {
                     rollerStatus = RollerStatus.Idle;
+                    slotMachineManager.CheckRollIsPossible();
                 }
             }
         }
