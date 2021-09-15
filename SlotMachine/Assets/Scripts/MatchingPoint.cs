@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MatchingFigures : MonoBehaviour
+public class MatchingPoint : MonoBehaviour
 {
-    public List<Figure> matchingFigures;
+    public Figure figure;
 }
