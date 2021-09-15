@@ -68,37 +68,39 @@ public class RollerBehaviour : MonoBehaviour
                 figureInstance.transform.localPosition = Vector3.zero;
                 currentFigure++;
 
-                CheckFigureTypeToSpawn(roller.figures[i], figureInstance);
+                CheckFigureTypeToSpawn(roller.figureType[i], figureInstance);
             
         }
     }
 
-    protected void CheckFigureTypeToSpawn(Roller.Figure figure, Figure figureInstance)
+    protected void CheckFigureTypeToSpawn(Figure.FigureType figureType, Figure figureInstance)
     {
-        switch (figure)
+        switch (figureType)
         {
-            case Roller.Figure.Bell:
+            case Figure.FigureType.Bell:
                 figureInstance.figureImage.sprite = figureImages.bell;
                 break;
-            case Roller.Figure.Cherry:
+            case Figure.FigureType.Cherry:
                 figureInstance.figureImage.sprite = figureImages.cherry;
                 break;
-            case Roller.Figure.Berry:
+            case Figure.FigureType.Berry:
                 figureInstance.figureImage.sprite = figureImages.berry;
                 break;
-            case Roller.Figure.Orange:
+            case Figure.FigureType.Orange:
                 figureInstance.figureImage.sprite = figureImages.orange;
                 break;
-            case Roller.Figure.Watermelon:
+            case Figure.FigureType.Watermelon:
                 figureInstance.figureImage.sprite = figureImages.watermelon;
                 break;
-            case Roller.Figure.Lemon:
+            case Figure.FigureType.Lemon:
                 figureInstance.figureImage.sprite = figureImages.lemon;
                 break;
-            case Roller.Figure.Grapes:
+            case Figure.FigureType.Grapes:
                 figureInstance.figureImage.sprite = figureImages.grapes;
                 break;
         }
+
+        figureInstance.figureType = figureType;
     }
 
     public void AdvanceRoller()
@@ -117,11 +119,11 @@ public class RollerBehaviour : MonoBehaviour
     protected void SpawnNewFigure()
     {
         Figure figureInstance = Instantiate(figurePrefab);
-        CheckFigureTypeToSpawn(roller.figures[currentFigure], figureInstance);
+        CheckFigureTypeToSpawn(roller.figureType[currentFigure], figureInstance);
         figureInstances.Insert(0, figureInstance);
         figureInstance.transform.SetParent(rollerTransforms[0]);
         figureInstance.transform.localPosition = Vector3.zero;
-        if (currentFigure < roller.figures.Count - 1)
+        if (currentFigure < roller.figureType.Count - 1)
         {
             currentFigure++;
         }

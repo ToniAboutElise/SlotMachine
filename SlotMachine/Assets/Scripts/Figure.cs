@@ -6,4 +6,17 @@ using UnityEngine.UI;
 public class Figure : MonoBehaviour
 {
     public Image figureImage;
+
+    public FigureType figureType;
+
+    public enum FigureType
+    {
+        Bell,
+        Cherry,
+        Berry,
+        Orange,
+        Watermelon,
+        Lemon,
+        Grapes
+    }
 }

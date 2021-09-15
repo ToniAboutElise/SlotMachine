@@ -6,19 +6,10 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New Roller", menuName = "Slot Machine/Roller")]
 public class Roller : ScriptableObject
 {
-    public List<Figure> figures;
+    public List<Figure.FigureType> figureType;
 
+    /*
     [HideInInspector]
-    public Figure figure;
-
-    public enum Figure
-    {
-        Bell,
-        Cherry,
-        Berry,
-        Orange,
-        Watermelon,
-        Lemon,
-        Grapes
-    }
+    public Figure.FigureType figure;
+    */
 }

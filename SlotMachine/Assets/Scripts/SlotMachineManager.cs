@@ -11,14 +11,6 @@ public class SlotMachineManager : MonoBehaviour
 
     public Button spinButton;
 
-    private void Start()
-    {
-        foreach(RollerBehaviour r in rollersList)
-        {
-            r.slotMachineManager = this;
-        }
-    }
-
     public void CheckRollIsPossible()
     {
         foreach(RollerBehaviour r in rollersList)
