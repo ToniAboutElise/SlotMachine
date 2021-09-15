@@ -151,16 +151,16 @@ public class RollerBehaviour : MonoBehaviour
             rollerStatus = RollerStatus.Rolling;
             figureInstances[0].transform.SetParent(rollerTransforms[1].transform);
             figureInstances[0].transform.localPosition = Vector2.MoveTowards(figureInstances[0].transform.localPosition, Vector2.zero, Time.deltaTime * slotMachineManager.velocity);
-            rollerTransforms[1].GetComponent<MatchingPoint>().figure = figureInstances[0];
+            
             figureInstances[1].transform.SetParent(rollerTransforms[2].transform);
             figureInstances[1].transform.localPosition = Vector2.MoveTowards(figureInstances[1].transform.localPosition, Vector2.zero, Time.deltaTime* slotMachineManager.velocity);
-            rollerTransforms[2].GetComponent<MatchingPoint>().figure = figureInstances[1];
+            
             figureInstances[2].transform.SetParent(rollerTransforms[3].transform);
             figureInstances[2].transform.localPosition = Vector2.MoveTowards(figureInstances[2].transform.localPosition, Vector2.zero, Time.deltaTime * slotMachineManager.velocity);
-            rollerTransforms[3].GetComponent<MatchingPoint>().figure = figureInstances[2];
+            
             figureInstances[3].transform.SetParent(rollerTransforms[4].transform);
             figureInstances[3].transform.localPosition = Vector2.MoveTowards(figureInstances[3].transform.localPosition, Vector2.zero, Time.deltaTime * slotMachineManager.velocity);
-            rollerTransforms[4].GetComponent<MatchingPoint>().figure = figureInstances[3];
+            
 
             if (Vector2.Distance(figureInstances[0].transform.localPosition, Vector2.zero) == 0)
             {
@@ -172,6 +172,9 @@ public class RollerBehaviour : MonoBehaviour
                 {
                     rollerStatus = RollerStatus.Idle;
                     slotMachineManager.CheckRollIsPossible();
+                    rollerTransforms[1].GetComponent<MatchingPoint>().figure = figureInstances[1];
+                    rollerTransforms[2].GetComponent<MatchingPoint>().figure = figureInstances[2];
+                    rollerTransforms[3].GetComponent<MatchingPoint>().figure = figureInstances[3];
                 }
             }
         }
