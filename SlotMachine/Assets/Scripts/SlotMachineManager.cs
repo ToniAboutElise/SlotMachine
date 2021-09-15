@@ -11,6 +11,8 @@ public class SlotMachineManager : MonoBehaviour
 
     public Button spinButton;
 
+    public MatchChecker matchChecker;
+
     public void CheckRollIsPossible()
     {
         foreach(RollerBehaviour r in rollersList)
@@ -21,7 +23,7 @@ public class SlotMachineManager : MonoBehaviour
             }
         }
 
-        spinButton.interactable = true;
+        matchChecker.CheckAllMatching();
 
     }
 

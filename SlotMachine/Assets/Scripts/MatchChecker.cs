@@ -13,7 +13,16 @@ public class MatchChecker : MonoBehaviour
 
     public void CheckAllMatching()
     {
+        CheckFixedMatching(VShapeMatchingTransformPoints);
+        CheckFixedMatching(WShapeMatchingTransformPoints);
 
+        StartCoroutine(WaitForSpinButtonInteractableAgain());
+    }
+
+    protected IEnumerator WaitForSpinButtonInteractableAgain()
+    {
+        yield return new WaitForSeconds(2);
+        slotMachineManager.spinButton.interactable = true;
     }
 
     protected void CheckHorizontalMatching()
@@ -41,12 +50,17 @@ public class MatchChecker : MonoBehaviour
         }
 
         //If watching has happened, then trigger the matching function
-        VisualMatchingFeedback(0, matchingPoints); // Modify value to make score appear
+        StartCoroutine(VisualMatchingFeedback(0, matchingPoints)); // Modify value to make score appear
     }
 
-    protected void VisualMatchingFeedback(int credits, List<MatchingPoint> matchingPoints)
+    protected IEnumerator VisualMatchingFeedback(int credits, List<MatchingPoint> matchingPoints)
     {
-        Debug.Log("MATCH!");
+        foreach (MatchingPoint mp in matchingPoints)
+        {
+            mp.figure.animator.SetBool("match", true);
+            yield return new WaitForSeconds(2);
+            mp.figure.animator.SetBool("match", false);
+        } 
     }
 
     private void Update()

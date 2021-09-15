@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class Figure : MonoBehaviour
 {
     public Image figureImage;
+    public Animator animator;
 
     public FigureType figureType;
 
