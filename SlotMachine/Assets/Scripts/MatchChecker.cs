@@ -44,7 +44,6 @@ public class MatchChecker : MonoBehaviour
         {
             if(matchingPoints[i].figure.figureType != targetFigureType)
             {
-                Debug.Log(targetFigureType + "NONO");
                 return;
             }
         }
