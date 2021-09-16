@@ -170,11 +170,11 @@ public class RollerBehaviour : MonoBehaviour
 
                 if (canRoll == false)
                 {
-                    rollerStatus = RollerStatus.Idle;
-                    slotMachineManager.CheckRollIsPossible();
                     rollerTransforms[1].GetComponent<MatchingPoint>().figure = figureInstances[1];
                     rollerTransforms[2].GetComponent<MatchingPoint>().figure = figureInstances[2];
                     rollerTransforms[3].GetComponent<MatchingPoint>().figure = figureInstances[3];
+                    rollerStatus = RollerStatus.Idle;
+                    slotMachineManager.CheckRollIsPossible();
                 }
             }
         }

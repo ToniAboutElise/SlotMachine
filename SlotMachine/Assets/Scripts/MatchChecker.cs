@@ -9,10 +9,26 @@ public class MatchChecker : MonoBehaviour
     public List<MatchingPoint> VShapeMatchingTransformPoints;
     public List<MatchingPoint> WShapeMatchingTransformPoints;
 
+    public List<MatchingPoint> UpperRowHorizontalMatchingPoints;
+    public List<MatchingPoint> MiddleRowHorizontalMatchingPoints;
+    public List<MatchingPoint> LowerRowHorizontalMatchingPoints;
+
+    public List<MatchFound> matchesFound;
+    protected MatchFound matchFound;
+
     protected int currentHorizontalPosition = 0;
+
+    private void Start()
+    {
+        //matchFound = new MatchFound();
+    }
 
     public void CheckAllMatching()
     {
+        CheckHorizontalMatching(UpperRowHorizontalMatchingPoints);
+        CheckHorizontalMatching(MiddleRowHorizontalMatchingPoints);
+        CheckHorizontalMatching(LowerRowHorizontalMatchingPoints);
+
         CheckFixedMatching(VShapeMatchingTransformPoints);
         CheckFixedMatching(WShapeMatchingTransformPoints);
 
@@ -25,13 +41,36 @@ public class MatchChecker : MonoBehaviour
         slotMachineManager.spinButton.interactable = true;
     }
 
-    protected void CheckHorizontalMatching()
+    protected void CheckHorizontalMatching(List<MatchingPoint> horizontalMatchingPoints)
     {
-        int maxHorizontal = slotMachineManager.rollersList.Count - 1;
+        Figure.FigureType targetFigureType = Figure.FigureType.Bell;
 
-        for(int i = 0; i < maxHorizontal; i++)
+        for (int i = 0; i < horizontalMatchingPoints.Count; i++)
         {
-            //slotMachineManager.rollersList[i].figureInstances[1]
+            Debug.Log(horizontalMatchingPoints[i].figure.figureType);
+            if (horizontalMatchingPoints[i].figure.figureType == targetFigureType)
+            {
+                //targetFigureType = horizontalMatchingPoints[i].figure.figureType;
+                //matchFound.matchingFigures.Add(horizontalMatchingPoints[i].figure);
+            }
+            else
+            {
+                targetFigureType = horizontalMatchingPoints[i].figure.figureType;
+                /*if (matchFound.matchingFigures.Count > 1)
+                {
+                    //Debug.Log("MATCH" + matchFound.matchingFigures.Count + matchFound.matchingFigures[0].figureType);
+                    foreach(Figure f in matchFound.matchingFigures)
+                    {
+                        //Debug.Log("Figure: " + f);
+                        f.animator.SetBool("match", true);
+                    }
+                    matchesFound.Add(matchFound);
+                    targetFigureType = horizontalMatchingPoints[i + 1].figure.figureType;
+                }
+                //matchFound.matchingFigures.Clear();
+                //matchFound.matchingFigures.Add(horizontalMatchingPoints[i].figure);
+                */
+            }
         }
 
     }
