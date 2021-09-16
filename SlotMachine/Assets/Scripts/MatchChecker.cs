@@ -49,6 +49,7 @@ public class MatchChecker : MonoBehaviour
 
         for (int i = 0; i < horizontalMatchingPoints.Count; i++)
         {
+            //Debug.Log(horizontalMatchingPoints[i].figure.figureType);
             if (targetFigureType == null)
             {
                 targetFigureType = horizontalMatchingPoints[i].figure.figureType;
@@ -62,13 +63,16 @@ public class MatchChecker : MonoBehaviour
                 {
                     foreach (Figure f in currentMatch)
                     {
+                        //Debug.Log(f.figureType);
                         f.animator.SetTrigger("match");
                     }
+                    currentMatch.Clear();
+                    targetFigureType = null;
                 }
             }
             else
             {
-                Debug.Log("BREAK MATCH");
+                //Debug.Log("BREAK MATCH");
                 if(currentMatch.Count > 1)
                 {
                     foreach(Figure f in currentMatch)
@@ -78,7 +82,8 @@ public class MatchChecker : MonoBehaviour
                 }
 
                 currentMatch.Clear();
-                targetFigureType = null;
+                targetFigureType = horizontalMatchingPoints[i].figure.figureType;
+                currentMatch.Add(horizontalMatchingPoints[i].figure);
             }
         }
         currentMatch.Clear();
@@ -114,7 +119,10 @@ public class MatchChecker : MonoBehaviour
     {
         if(Input.GetKeyDown(KeyCode.Q))
         {
-            CheckFixedMatching(VShapeMatchingTransformPoints);
+            //CheckFixedMatching(VShapeMatchingTransformPoints);
+            CheckHorizontalMatching(UpperRowHorizontalMatchingPoints);
+            CheckHorizontalMatching(MiddleRowHorizontalMatchingPoints);
+            CheckHorizontalMatching(LowerRowHorizontalMatchingPoints);
         }
     }
 
