@@ -13,6 +13,8 @@ public class MatchChecker : MonoBehaviour
     public List<MatchingPoint> MiddleRowHorizontalMatchingPoints;
     public List<MatchingPoint> LowerRowHorizontalMatchingPoints;
 
+    public List<Figure> currentMatch = new List<Figure>();
+
     public List<MatchFound> matchesFound;
     protected MatchFound matchFound;
 
@@ -43,7 +45,7 @@ public class MatchChecker : MonoBehaviour
 
     protected void CheckHorizontalMatching(List<MatchingPoint> horizontalMatchingPoints)
     {
-        Figure.FigureType targetFigureType = Figure.FigureType.Bell;
+        Figure.FigureType? targetFigureType = null;
 
         for (int i = 0; i < horizontalMatchingPoints.Count; i++)
         {
@@ -52,26 +54,38 @@ public class MatchChecker : MonoBehaviour
             {
                 //targetFigureType = horizontalMatchingPoints[i].figure.figureType;
                 //matchFound.matchingFigures.Add(horizontalMatchingPoints[i].figure);
+                currentMatch.Add(horizontalMatchingPoints[i].figure);
             }
             else
             {
-                targetFigureType = horizontalMatchingPoints[i].figure.figureType;
-                /*if (matchFound.matchingFigures.Count > 1)
+                if(targetFigureType == null)
                 {
-                    //Debug.Log("MATCH" + matchFound.matchingFigures.Count + matchFound.matchingFigures[0].figureType);
-                    foreach(Figure f in matchFound.matchingFigures)
+                    targetFigureType = horizontalMatchingPoints[i].figure.figureType;
+                    currentMatch.Add(horizontalMatchingPoints[i].figure);
+                }
+
+                if (currentMatch.Count > 0)
+                {
+                    foreach(Figure f in currentMatch)
                     {
-                        //Debug.Log("Figure: " + f);
+                        Debug.Log("Figure: " + f);
                         f.animator.SetBool("match", true);
                     }
-                    matchesFound.Add(matchFound);
-                    targetFigureType = horizontalMatchingPoints[i + 1].figure.figureType;
+
+                    if(i < horizontalMatchingPoints.Count-1)
+                    { 
+                        targetFigureType = horizontalMatchingPoints[i + 1].figure.figureType;
+                    }
                 }
-                //matchFound.matchingFigures.Clear();
-                //matchFound.matchingFigures.Add(horizontalMatchingPoints[i].figure);
-                */
+                else
+                {
+                    targetFigureType = null;
+                    currentMatch.Clear();
+                }
+                
             }
         }
+        currentMatch.Clear();
 
     }
 
