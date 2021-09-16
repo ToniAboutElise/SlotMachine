@@ -54,25 +54,31 @@ public class MatchChecker : MonoBehaviour
                 targetFigureType = horizontalMatchingPoints[i].figure.figureType;
                 currentMatch.Add(horizontalMatchingPoints[i].figure);
             }
+            else if (horizontalMatchingPoints[i].figure.figureType == targetFigureType)
+            {
+                currentMatch.Add(horizontalMatchingPoints[i].figure);
+                Debug.Log(horizontalMatchingPoints[i].figure.figureType);
+                if (i == horizontalMatchingPoints.Count-1)
+                {
+                    foreach (Figure f in currentMatch)
+                    {
+                        f.animator.SetTrigger("match");
+                    }
+                }
+            }
             else
             {
-                if(horizontalMatchingPoints[i].figure.figureType == targetFigureType)
+                Debug.Log("BREAK MATCH");
+                if(currentMatch.Count > 1)
                 {
-                    currentMatch.Add(horizontalMatchingPoints[i].figure);
-                }
-                else
-                {
-                    if(currentMatch.Count > 1)
+                    foreach(Figure f in currentMatch)
                     {
-                        foreach(Figure f in currentMatch)
-                        {
-                            f.animator.SetTrigger("match");
-                        }
+                        f.animator.SetTrigger("match");
                     }
-
-                    currentMatch.Clear();
-                    targetFigureType = null;
                 }
+
+                currentMatch.Clear();
+                targetFigureType = null;
             }
         }
         currentMatch.Clear();
