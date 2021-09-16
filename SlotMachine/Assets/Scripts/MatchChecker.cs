@@ -49,44 +49,33 @@ public class MatchChecker : MonoBehaviour
 
         for (int i = 0; i < horizontalMatchingPoints.Count; i++)
         {
-            Debug.Log(horizontalMatchingPoints[i].figure.figureType);
-            if (horizontalMatchingPoints[i].figure.figureType == targetFigureType)
+            if (targetFigureType == null)
             {
-                //targetFigureType = horizontalMatchingPoints[i].figure.figureType;
-                //matchFound.matchingFigures.Add(horizontalMatchingPoints[i].figure);
+                targetFigureType = horizontalMatchingPoints[i].figure.figureType;
                 currentMatch.Add(horizontalMatchingPoints[i].figure);
             }
             else
             {
-                if(targetFigureType == null)
+                if(horizontalMatchingPoints[i].figure.figureType == targetFigureType)
                 {
-                    targetFigureType = horizontalMatchingPoints[i].figure.figureType;
                     currentMatch.Add(horizontalMatchingPoints[i].figure);
-                }
-
-                if (currentMatch.Count > 0)
-                {
-                    foreach(Figure f in currentMatch)
-                    {
-                        Debug.Log("Figure: " + f);
-                        f.animator.SetBool("match", true);
-                    }
-
-                    if(i < horizontalMatchingPoints.Count-1)
-                    { 
-                        targetFigureType = horizontalMatchingPoints[i + 1].figure.figureType;
-                    }
                 }
                 else
                 {
-                    targetFigureType = null;
+                    if(currentMatch.Count > 1)
+                    {
+                        foreach(Figure f in currentMatch)
+                        {
+                            f.animator.SetTrigger("match");
+                        }
+                    }
+
                     currentMatch.Clear();
+                    targetFigureType = null;
                 }
-                
             }
         }
         currentMatch.Clear();
-
     }
 
     protected void CheckFixedMatching(List<MatchingPoint> matchingPoints)
