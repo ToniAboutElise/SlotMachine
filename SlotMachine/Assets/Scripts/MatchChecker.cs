@@ -17,13 +17,9 @@ public class MatchChecker : MonoBehaviour
 
     public List<MatchFound> matchesFound;
     protected MatchFound matchFound;
+    protected int matchAmount = 0;
 
     protected int currentHorizontalPosition = 0;
-
-    private void Start()
-    {
-        //matchFound = new MatchFound();
-    }
 
     public void CheckAllMatching()
     {
@@ -39,8 +35,16 @@ public class MatchChecker : MonoBehaviour
 
     protected IEnumerator WaitForSpinButtonInteractableAgain()
     {
-        yield return new WaitForSeconds(2);
+        if(matchAmount > 0)
+        { 
+            yield return new WaitForSeconds(2.2f);
+        }
+        else
+        {
+            yield return null;
+        }
         slotMachineManager.spinButton.interactable = true;
+        matchAmount = 0;
     }
 
     protected void CheckHorizontalMatching(List<MatchingPoint> horizontalMatchingPoints)
@@ -65,6 +69,7 @@ public class MatchChecker : MonoBehaviour
                     {
                         //Debug.Log(f.figureType);
                         f.animator.SetTrigger("match");
+                        matchAmount++;
                     }
                     currentMatch.Clear();
                     targetFigureType = null;
@@ -78,6 +83,7 @@ public class MatchChecker : MonoBehaviour
                     foreach(Figure f in currentMatch)
                     {
                         f.animator.SetTrigger("match");
+                        matchAmount++;
                     }
                 }
 
