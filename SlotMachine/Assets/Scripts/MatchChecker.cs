@@ -62,7 +62,6 @@ public class MatchChecker : MonoBehaviour
 
         for (int i = 0; i < matchingRow.matchingPoints.Count; i++)
         {
-            //Debug.Log(horizontalMatchingPoints[i].figure.figureType);
             if (targetFigureType == null)
             {
                 targetFigureType = matchingRow.matchingPoints[i].figure.figureType;
@@ -113,9 +112,20 @@ public class MatchChecker : MonoBehaviour
             }
         }
 
-       //VisualMatchingFeedback(matchingRow.matchingPoints);
+        matchingRow.creditsText.text = "1000" + " CREDITS";
+        matchingRow.pointsAnimator.SetTrigger("Show");
+
+        List<Figure> specialPatternMatch = new List<Figure>();
+
+        for(int i = 0; i < matchingRow.matchingPoints.Count; i++)
+        {
+            currentMatch.Add(matchingRow.matchingPoints[i].figure);
+        }
+
+        VisualMatchingFeedback(currentMatch);
     }
 
+    //Once a match has happened, this method highlights the matching figures
     protected void VisualMatchingFeedback(List<Figure> figureList)
     {
         foreach (Figure f in currentMatch)

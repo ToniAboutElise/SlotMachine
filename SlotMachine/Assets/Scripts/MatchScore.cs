@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+//This class stores are the values of each figure match, variable depending on the figure amount for each combination
+
 public class MatchScore : MonoBehaviour
 {
     public int[] bellPoints = { 50, 75, 100, 100 };
@@ -12,6 +14,8 @@ public class MatchScore : MonoBehaviour
     public int[] grapesPoints = { 10, 20, 50, 50 };
     public int[] lemonPoints = { 5, 10, 20, 20 };
 
+
+    //Method used to retrieve score to then display it on screen
     public int RetrieveScore(Figure.FigureType figureType, int figureAmount)
     {
         int result = 0;

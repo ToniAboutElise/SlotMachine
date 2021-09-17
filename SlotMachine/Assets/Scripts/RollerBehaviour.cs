@@ -47,6 +47,7 @@ public class RollerBehaviour : MonoBehaviour
         SetFigures();
     }
 
+    //Initializes images from resources folder
     protected void InitializeImages()
     {
         figureImages.bell = Resources.Load<Sprite>("Figures/bell");
@@ -110,10 +111,12 @@ public class RollerBehaviour : MonoBehaviour
 
     public void AdvanceRoller()
     {
+        //float that randomizes the time the roller will spin, from 2 to 4 seconds
         float rollTime = Random.Range(2, 4);
         StartCoroutine(AllowRoll(rollTime));
     }
 
+    //Manage when the roll can keep spinning according to the 2-4 seconds random float from the previous function
     protected IEnumerator AllowRoll(float rollTime)
     {
         canRoll = true;
@@ -121,6 +124,7 @@ public class RollerBehaviour : MonoBehaviour
         canRoll = false;
     }
 
+    //Method use to instantiate new figure at the first position
     protected void SpawnNewFigure()
     {
         Figure figureInstance = Instantiate(figurePrefab);
@@ -138,29 +142,31 @@ public class RollerBehaviour : MonoBehaviour
         }
     }
 
+    //Method that destroys thefigure in the last position
     protected void DestroyEndFigure()
     {
         Destroy(rollerTransforms[rollerTransforms.Count - 1].GetChild(0).gameObject);
         figureInstances.RemoveAt(figureInstances.Count - 1);
     }
 
-    private void Update()
+    //Method used to check how and when the roll is spinning
+    protected void RollSpinningManager()
     {
         if (canRoll == true || rollerStatus == RollerStatus.Rolling)
         {
             rollerStatus = RollerStatus.Rolling;
             figureInstances[0].transform.SetParent(rollerTransforms[1].transform);
             figureInstances[0].transform.localPosition = Vector2.MoveTowards(figureInstances[0].transform.localPosition, Vector2.zero, Time.deltaTime * slotMachineManager.velocity);
-            
+
             figureInstances[1].transform.SetParent(rollerTransforms[2].transform);
-            figureInstances[1].transform.localPosition = Vector2.MoveTowards(figureInstances[1].transform.localPosition, Vector2.zero, Time.deltaTime* slotMachineManager.velocity);
-            
+            figureInstances[1].transform.localPosition = Vector2.MoveTowards(figureInstances[1].transform.localPosition, Vector2.zero, Time.deltaTime * slotMachineManager.velocity);
+
             figureInstances[2].transform.SetParent(rollerTransforms[3].transform);
             figureInstances[2].transform.localPosition = Vector2.MoveTowards(figureInstances[2].transform.localPosition, Vector2.zero, Time.deltaTime * slotMachineManager.velocity);
-            
+
             figureInstances[3].transform.SetParent(rollerTransforms[4].transform);
             figureInstances[3].transform.localPosition = Vector2.MoveTowards(figureInstances[3].transform.localPosition, Vector2.zero, Time.deltaTime * slotMachineManager.velocity);
-            
+
 
             if (Vector2.Distance(figureInstances[0].transform.localPosition, Vector2.zero) == 0)
             {
@@ -178,5 +184,10 @@ public class RollerBehaviour : MonoBehaviour
                 }
             }
         }
+    }
+
+    private void Update()
+    {
+        RollSpinningManager();
     }
 }

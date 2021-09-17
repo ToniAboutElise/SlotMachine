@@ -35,6 +35,7 @@ public class SlotMachineManager : MonoBehaviour
         StartCoroutine(RollSequentially());
     }
 
+    //Coroutine used to make rolls spin sequentially with a bit of time in between
     protected IEnumerator RollSequentially()
     {
         foreach(RollerBehaviour r in rollersList)
