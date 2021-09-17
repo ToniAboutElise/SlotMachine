@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+//Slot Machine script to control the spin button, common velocity between all rollers and call the method that checks if one or more
+//matches have happened
+
 public class SlotMachineManager : MonoBehaviour
 {
     public List<RollerBehaviour> rollersList;
