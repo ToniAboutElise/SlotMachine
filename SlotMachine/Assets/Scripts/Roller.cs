@@ -7,9 +7,4 @@ using UnityEngine;
 public class Roller : ScriptableObject
 {
     public List<Figure.FigureType> figureType;
-
-    /*
-    [HideInInspector]
-    public Figure.FigureType figure;
-    */
 }

@@ -7,6 +7,8 @@ public class SlotMachineManager : MonoBehaviour
 {
     public List<RollerBehaviour> rollersList;
 
+    public int creditsWon = 0;
+
     public int velocity = 1000;
 
     public Button spinButton;
@@ -24,7 +26,7 @@ public class SlotMachineManager : MonoBehaviour
         }
 
         matchChecker.CheckAllMatching();
-
+        Debug.Log(creditsWon);
     }
 
     public void Roll()

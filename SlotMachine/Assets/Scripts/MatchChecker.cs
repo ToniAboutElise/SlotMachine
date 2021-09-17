@@ -6,29 +6,31 @@ public class MatchChecker : MonoBehaviour
 {
     public SlotMachineManager slotMachineManager;
 
-    public List<MatchingPoint> VShapeMatchingTransformPoints;
-    public List<MatchingPoint> WShapeMatchingTransformPoints;
+    public MatchRow upperMatchRow;
+    public MatchRow middleMatchRow;
+    public MatchRow lowerMatchRow;
+    public MatchRow vShapeMatchRow;
+    public MatchRow wShapeMatchRow;
 
-    public List<MatchingPoint> UpperRowHorizontalMatchingPoints;
-    public List<MatchingPoint> MiddleRowHorizontalMatchingPoints;
-    public List<MatchingPoint> LowerRowHorizontalMatchingPoints;
+    //public Animator upperRow
 
     public List<Figure> currentMatch = new List<Figure>();
 
     public List<MatchFound> matchesFound;
     protected MatchFound matchFound;
     protected int matchAmount = 0;
+    public MatchScore matchScore;
 
     protected int currentHorizontalPosition = 0;
 
     public void CheckAllMatching()
     {
-        CheckHorizontalMatching(UpperRowHorizontalMatchingPoints);
-        CheckHorizontalMatching(MiddleRowHorizontalMatchingPoints);
-        CheckHorizontalMatching(LowerRowHorizontalMatchingPoints);
+        CheckHorizontalMatching(upperMatchRow);
+        CheckHorizontalMatching(middleMatchRow);
+        CheckHorizontalMatching(lowerMatchRow);
 
-        CheckFixedMatching(VShapeMatchingTransformPoints);
-        CheckFixedMatching(WShapeMatchingTransformPoints);
+        CheckFixedMatching(vShapeMatchRow);
+        CheckFixedMatching(wShapeMatchRow);
 
         StartCoroutine(WaitForSpinButtonInteractableAgain());
     }
@@ -47,37 +49,37 @@ public class MatchChecker : MonoBehaviour
         matchAmount = 0;
     }
 
-    protected void CheckHorizontalMatching(List<MatchingPoint> horizontalMatchingPoints)
+    protected void CheckHorizontalMatching(MatchRow matchingRow)
     {
         Figure.FigureType? targetFigureType = null;
 
-        for (int i = 0; i < horizontalMatchingPoints.Count; i++)
+        for (int i = 0; i < matchingRow.matchingPoints.Count; i++)
         {
             //Debug.Log(horizontalMatchingPoints[i].figure.figureType);
             if (targetFigureType == null)
             {
-                targetFigureType = horizontalMatchingPoints[i].figure.figureType;
-                currentMatch.Add(horizontalMatchingPoints[i].figure);
+                targetFigureType = matchingRow.matchingPoints[i].figure.figureType;
+                currentMatch.Add(matchingRow.matchingPoints[i].figure);
             }
-            else if (horizontalMatchingPoints[i].figure.figureType == targetFigureType)
+            else if (matchingRow.matchingPoints[i].figure.figureType == targetFigureType)
             {
-                currentMatch.Add(horizontalMatchingPoints[i].figure);
-                Debug.Log(horizontalMatchingPoints[i].figure.figureType);
-                if (i == horizontalMatchingPoints.Count-1)
+                currentMatch.Add(matchingRow.matchingPoints[i].figure);
+                if (i == matchingRow.matchingPoints.Count-1)
                 {
                     foreach (Figure f in currentMatch)
                     {
-                        //Debug.Log(f.figureType);
                         f.animator.SetTrigger("match");
                         matchAmount++;
                     }
+                    //Debug.Log(currentMatch[0].figureType + " " + currentMatch.Count.ToString());
+                    //Debug.Log(currentMatch[0].figureType + " " + matchScore.RetrieveScore(currentMatch[0].figureType, currentMatch.Count));
+                    slotMachineManager.creditsWon += matchScore.RetrieveScore(currentMatch[0].figureType, currentMatch.Count);
                     currentMatch.Clear();
                     targetFigureType = null;
                 }
             }
             else
             {
-                //Debug.Log("BREAK MATCH");
                 if(currentMatch.Count > 1)
                 {
                     foreach(Figure f in currentMatch)
@@ -85,30 +87,32 @@ public class MatchChecker : MonoBehaviour
                         f.animator.SetTrigger("match");
                         matchAmount++;
                     }
+                    //Debug.Log(currentMatch[0].figureType + " " + currentMatch.Count.ToString());
+                    //Debug.Log(currentMatch[0].figureType +" " + matchScore.RetrieveScore(currentMatch[0].figureType, currentMatch.Count));
+                    slotMachineManager.creditsWon += matchScore.RetrieveScore(currentMatch[0].figureType, currentMatch.Count);
                 }
-
                 currentMatch.Clear();
-                targetFigureType = horizontalMatchingPoints[i].figure.figureType;
-                currentMatch.Add(horizontalMatchingPoints[i].figure);
+                targetFigureType = matchingRow.matchingPoints[i].figure.figureType;
+                currentMatch.Add(matchingRow.matchingPoints[i].figure);
             }
         }
         currentMatch.Clear();
     }
 
-    protected void CheckFixedMatching(List<MatchingPoint> matchingPoints)
+    protected void CheckFixedMatching(MatchRow matchingRow)
     {
-        Figure.FigureType targetFigureType = matchingPoints[0].figure.figureType;
+        Figure.FigureType targetFigureType = matchingRow.matchingPoints[0].figure.figureType;
 
-        for(int i = 1; i < matchingPoints.Count; i++)
+        for(int i = 1; i < matchingRow.matchingPoints.Count; i++)
         {
-            if(matchingPoints[i].figure.figureType != targetFigureType)
+            if(matchingRow.matchingPoints[i].figure.figureType != targetFigureType)
             {
                 return;
             }
         }
 
         //If watching has happened, then trigger the matching function
-        StartCoroutine(VisualMatchingFeedback(0, matchingPoints)); // Modify value to make score appear
+        StartCoroutine(VisualMatchingFeedback(0, matchingRow.matchingPoints)); // Modify value to make score appear
     }
 
     protected IEnumerator VisualMatchingFeedback(int credits, List<MatchingPoint> matchingPoints)
@@ -120,16 +124,4 @@ public class MatchChecker : MonoBehaviour
             mp.figure.animator.SetBool("match", false);
         } 
     }
-
-    private void Update()
-    {
-        if(Input.GetKeyDown(KeyCode.Q))
-        {
-            //CheckFixedMatching(VShapeMatchingTransformPoints);
-            CheckHorizontalMatching(UpperRowHorizontalMatchingPoints);
-            CheckHorizontalMatching(MiddleRowHorizontalMatchingPoints);
-            CheckHorizontalMatching(LowerRowHorizontalMatchingPoints);
-        }
-    }
-
 }
