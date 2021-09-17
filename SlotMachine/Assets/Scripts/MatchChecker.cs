@@ -12,8 +12,6 @@ public class MatchChecker : MonoBehaviour
     public MatchRow vShapeMatchRow;
     public MatchRow wShapeMatchRow;
 
-    //public Animator upperRow
-
     public List<Figure> currentMatch = new List<Figure>();
 
     public List<MatchFound> matchesFound;
@@ -53,6 +51,8 @@ public class MatchChecker : MonoBehaviour
     {
         Figure.FigureType? targetFigureType = null;
 
+        matchingRow.credits = 0;
+
         for (int i = 0; i < matchingRow.matchingPoints.Count; i++)
         {
             //Debug.Log(horizontalMatchingPoints[i].figure.figureType);
@@ -71,9 +71,8 @@ public class MatchChecker : MonoBehaviour
                         f.animator.SetTrigger("match");
                         matchAmount++;
                     }
-                    //Debug.Log(currentMatch[0].figureType + " " + currentMatch.Count.ToString());
-                    //Debug.Log(currentMatch[0].figureType + " " + matchScore.RetrieveScore(currentMatch[0].figureType, currentMatch.Count));
-                    slotMachineManager.creditsWon += matchScore.RetrieveScore(currentMatch[0].figureType, currentMatch.Count);
+
+                    matchingRow.credits += matchScore.RetrieveScore(currentMatch[0].figureType, currentMatch.Count);
                     currentMatch.Clear();
                     targetFigureType = null;
                 }
@@ -87,14 +86,17 @@ public class MatchChecker : MonoBehaviour
                         f.animator.SetTrigger("match");
                         matchAmount++;
                     }
-                    //Debug.Log(currentMatch[0].figureType + " " + currentMatch.Count.ToString());
-                    //Debug.Log(currentMatch[0].figureType +" " + matchScore.RetrieveScore(currentMatch[0].figureType, currentMatch.Count));
-                    slotMachineManager.creditsWon += matchScore.RetrieveScore(currentMatch[0].figureType, currentMatch.Count);
+                    matchingRow.credits += matchScore.RetrieveScore(currentMatch[0].figureType, currentMatch.Count);
                 }
                 currentMatch.Clear();
                 targetFigureType = matchingRow.matchingPoints[i].figure.figureType;
                 currentMatch.Add(matchingRow.matchingPoints[i].figure);
             }
+        }
+        if(matchingRow.credits != 0)
+        {
+            matchingRow.creditsText.text = matchingRow.credits.ToString() + " CREDITS";
+            matchingRow.pointsAnimator.SetTrigger("Show");
         }
         currentMatch.Clear();
     }
@@ -111,11 +113,10 @@ public class MatchChecker : MonoBehaviour
             }
         }
 
-        //If watching has happened, then trigger the matching function
-        StartCoroutine(VisualMatchingFeedback(0, matchingRow.matchingPoints)); // Modify value to make score appear
+        StartCoroutine(VisualMatchingFeedback(matchingRow.matchingPoints));
     }
 
-    protected IEnumerator VisualMatchingFeedback(int credits, List<MatchingPoint> matchingPoints)
+    protected IEnumerator VisualMatchingFeedback(List<MatchingPoint> matchingPoints)
     {
         foreach (MatchingPoint mp in matchingPoints)
         {
