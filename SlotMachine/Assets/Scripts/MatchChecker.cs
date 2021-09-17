@@ -14,8 +14,6 @@ public class MatchChecker : MonoBehaviour
 
     public List<Figure> currentMatch = new List<Figure>();
 
-    public List<MatchFound> matchesFound;
-    protected MatchFound matchFound;
     protected int matchAmount = 0;
     public MatchScore matchScore;
 
