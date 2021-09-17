@@ -2,13 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+//This class manages the possible checks that may happen
+
 public class MatchChecker : MonoBehaviour
 {
     public SlotMachineManager slotMachineManager;
 
+    //All 3 rows variables to check horizontal matches
     public MatchRow upperMatchRow;
     public MatchRow middleMatchRow;
     public MatchRow lowerMatchRow;
+
+    //The 2 optional extra patterns where all figures must be the exact same
     public MatchRow vShapeMatchRow;
     public MatchRow wShapeMatchRow;
 
@@ -19,6 +24,7 @@ public class MatchChecker : MonoBehaviour
 
     protected int currentHorizontalPosition = 0;
 
+    //Method to check all possible patterns
     public void CheckAllMatching()
     {
         CheckHorizontalMatching(upperMatchRow);
@@ -31,6 +37,8 @@ public class MatchChecker : MonoBehaviour
         StartCoroutine(WaitForSpinButtonInteractableAgain());
     }
 
+    //Coroutine that reenables the Spin Button. It will take a couple seconds if there's at least one match so the desired
+    //match animation can be played
     protected IEnumerator WaitForSpinButtonInteractableAgain()
     {
         if(matchAmount > 0)
@@ -45,6 +53,7 @@ public class MatchChecker : MonoBehaviour
         matchAmount = 0;
     }
 
+    //Method to check sequentially the figures for horizontal matching
     protected void CheckHorizontalMatching(MatchRow matchingRow)
     {
         Figure.FigureType? targetFigureType = null;
@@ -64,12 +73,7 @@ public class MatchChecker : MonoBehaviour
                 currentMatch.Add(matchingRow.matchingPoints[i].figure);
                 if (i == matchingRow.matchingPoints.Count-1)
                 {
-                    foreach (Figure f in currentMatch)
-                    {
-                        f.animator.SetTrigger("match");
-                        matchAmount++;
-                    }
-
+                    VisualMatchingFeedback(currentMatch);
                     matchingRow.credits += matchScore.RetrieveScore(currentMatch[0].figureType, currentMatch.Count);
                     currentMatch.Clear();
                     targetFigureType = null;
@@ -79,11 +83,7 @@ public class MatchChecker : MonoBehaviour
             {
                 if(currentMatch.Count > 1)
                 {
-                    foreach(Figure f in currentMatch)
-                    {
-                        f.animator.SetTrigger("match");
-                        matchAmount++;
-                    }
+                    VisualMatchingFeedback(currentMatch);
                     matchingRow.credits += matchScore.RetrieveScore(currentMatch[0].figureType, currentMatch.Count);
                 }
                 currentMatch.Clear();
@@ -99,6 +99,8 @@ public class MatchChecker : MonoBehaviour
         currentMatch.Clear();
     }
 
+
+    //Method to check if all the figures in the special patterns are exactly the same
     protected void CheckFixedMatching(MatchRow matchingRow)
     {
         Figure.FigureType targetFigureType = matchingRow.matchingPoints[0].figure.figureType;
@@ -111,16 +113,15 @@ public class MatchChecker : MonoBehaviour
             }
         }
 
-        StartCoroutine(VisualMatchingFeedback(matchingRow.matchingPoints));
+       //VisualMatchingFeedback(matchingRow.matchingPoints);
     }
 
-    protected IEnumerator VisualMatchingFeedback(List<MatchingPoint> matchingPoints)
+    protected void VisualMatchingFeedback(List<Figure> figureList)
     {
-        foreach (MatchingPoint mp in matchingPoints)
+        foreach (Figure f in currentMatch)
         {
-            mp.figure.animator.SetBool("match", true);
-            yield return new WaitForSeconds(2);
-            mp.figure.animator.SetBool("match", false);
-        } 
+            f.animator.SetTrigger("match");
+            matchAmount++;
+        }
     }
 }
